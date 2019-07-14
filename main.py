@@ -1,8 +1,10 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import CommandNotFound
 import asyncio
 
 import datetime
+from functions import Connection
 
 #Sets the prefix
 def get_prefix(bot, message):
@@ -15,7 +17,10 @@ description = "OTUBot - For managing the OTU Discord"
 # Bot cogs
 cogs = [
     "cogs.owner",
-    "cogs.general"
+    "cogs.general",
+    "cogs.f",
+    "cogs.eightball",
+    "cogs.custom"
 ]
 
 # Global check
@@ -51,6 +56,19 @@ async def on_ready():
         if member.guild_permissions.administrator == False:
             await member.add_roles(student)
 
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, CommandNotFound):
+        conn = Connection('OTUDatabase')
+        output = conn.queryWithValues("SELECT output FROM customCommands WHERE command=?", (ctx.message.content.strip('!').split(' ')[0],))
+        msg = output.fetchone()
+        if msg != None:
+            await ctx.send(msg[0])
+        else:
+            pass
+        return
+    raise error
+
 # When user joins
 @bot.event
 async def on_member_join(member):
@@ -69,9 +87,10 @@ async def minuteClock():
     while not bot.is_closed():
         if datetime.datetime.now().hour != currentTime.hour:
             currentTime = datetime.datetime.now()
-            count += 1
-            if count == 2:
-                await welcomeChannel.send("Members will be automatically given the Student role in one hour. If you'd like to select your faculty you have one hour to do so. Use `!faculty` to select your faculty.")
+            if len(welcomeChannel.members) > 2:
+                count += 1
+                if count == 2:
+                    await welcomeChannel.send("Members will be automatically given the Student role in one hour. If you'd like to select your faculty you have one hour to do so. Use `!faculty` to select your faculty.")
         else:
             await asyncio.sleep(60)
         if count == 3:

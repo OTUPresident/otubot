@@ -17,13 +17,31 @@ class GeneralCog(commands.Cog):
         "FSSH": 598000927244550154,
         }
 
+        self.commands = [
+            ['help', 'Display this message'],
+            ['f', 'Pay your respects'],
+            ['8ball', 'Ask the magic Murphy'],
+            ['nsfw', 'Admit your degeneracy and gain access to the NSFW channel'],
+            ['github', 'For those who want to contribute to OTUBot']
+        ]
+
     @commands.command(name='help')
     async def help(self, ctx):
-        await ctx.send("https://tenor.com/view/cat-no-ones-around-to-help-dance-gif-12006069")
+        # await ctx.send("https://tenor.com/view/cat-no-ones-around-to-help-dance-gif-12006069")
+        msg = "```\n"
+        for command, info in self.commands:
+            msg += '{:<{width}} {:<} {:<}\n'.format(command, '-' * (10 - len(command)), info, width=len(command))
+        msg += '```'
+        await ctx.send(msg)
 
     @commands.command(name="github")
     async def github(self, ctx):
         await ctx.send("https://github.com/OTUPresident/otubot")
+
+    @commands.command(name="nsfw", aliases=['NSFW'])
+    async def nsfw(self, ctx):
+        await ctx.author.add_roles(ctx.guild.get_role(599360290252914714))
+        await ctx.message.delete()
 
     @commands.command(name='faculty')
     async def faculty(self, ctx, *, fac: str = None):
