@@ -8,7 +8,7 @@ from functions import Connection
 
 #Sets the prefix
 def get_prefix(bot, message):
-    prefixes = ['!']
+    prefixes = ['~', '-']
     return commands.when_mentioned_or(*prefixes)(bot, message)
 
 # Bot description
@@ -87,10 +87,9 @@ async def minuteClock():
     while not bot.is_closed():
         if datetime.datetime.now().hour != currentTime.hour:
             currentTime = datetime.datetime.now()
-            if len(welcomeChannel.members) > 2:
-                count += 1
-                if count == 2:
-                    await welcomeChannel.send("Members will be automatically given the Student role in one hour. If you'd like to select your faculty you have one hour to do so. Use `!faculty` to select your faculty.")
+            count += 1
+            if count == 2 and len(welcomeChannel.members) > 2:
+                await welcomeChannel.send("Members will be automatically given the Student role in one hour. If you'd like to select your faculty you have one hour to do so. Use `!faculty` to select your faculty.")
         else:
             await asyncio.sleep(60)
         if count == 3:

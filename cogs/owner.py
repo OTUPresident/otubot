@@ -29,6 +29,12 @@ class OwnerCog(commands.Cog):
         else:
             await ctx.send('**`SUCCESS`**')
 
+    @commands.command(name='avatar', hidden=True)
+    @commands.is_owner()
+    async def avatar(self, ctx):
+        with open('OTUBot.png', 'rb') as b:
+            await self.bot.user.edit(avatar=b.read())
+
 
 
 def setup(bot):

@@ -22,7 +22,8 @@ class GeneralCog(commands.Cog):
             ['f', 'Pay your respects'],
             ['8ball', 'Ask the magic Murphy'],
             ['nsfw', 'Admit your degeneracy and gain access to the NSFW channel'],
-            ['github', 'For those who want to contribute to OTUBot']
+            ['github', 'For those who want to contribute to OTUBot'],
+            ['custom', 'Make your own commands!']
         ]
 
     @commands.command(name='help')
